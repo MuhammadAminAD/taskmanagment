@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 export default function Auth() {
     function handleGoogleClick() {
-        window.location.href = `${import.meta.env.VITE_BACK_API}/auth/google`
+        window.location.href = `https://tmanagment.up.railway.app/api/v1/auth/google`
     }
     function handleTelegramClick() {
         alert("Yasmadinu. Yasab kegin bos!")

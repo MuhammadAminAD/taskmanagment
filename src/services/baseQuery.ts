@@ -8,7 +8,7 @@ interface RefreshResponse {
 }
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_BACK_API,
+    baseUrl: "https://tmanagment.up.railway.app/api/v1",
     credentials: 'include',
     prepareHeaders: (headers) => {
         const token = localStorage.getItem('access_token')

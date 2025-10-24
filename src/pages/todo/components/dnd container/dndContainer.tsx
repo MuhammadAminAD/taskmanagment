@@ -3,7 +3,7 @@ import { DndContext } from "@dnd-kit/core";
 import { STATUS_CONFIG } from "./dndContainer.util";
 import { useDndSensors, useDragHandlers, useTaskStatusUpdater } from "./dndContainer.hooks";
 import dndcontainerReducer, { DndcontainerInitialState } from "./dndContainer.reducers";
-import { StatusColumn } from "./StatusColumun";
+import StatusColumn from "./StatusColumun";
 
 export default function DndContainer() {
     const [state, dispatch] = useReducer(dndcontainerReducer, DndcontainerInitialState);

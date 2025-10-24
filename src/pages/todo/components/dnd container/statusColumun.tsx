@@ -4,7 +4,7 @@ import ItemCard from "../itemCard";
 import { DroppableZone } from "./DropableZone";
 import { StatusColumnProps } from "./dndContainer.types";
 
-export function StatusColumn({ status, tasks }: StatusColumnProps) {
+export default function StatusColumn({ status, tasks }: StatusColumnProps) {
     return (
         <div key={status.value} id={status.value} className="mt-8">
             <h3 className={`mb-2 py-1 px-3 ${status.color} rounded-md w-fit text-white font-bold`}>

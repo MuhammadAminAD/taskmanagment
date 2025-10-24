@@ -1,6 +1,6 @@
 import Filter from "./components/Filter/filter";
 import CreateTask from "./components/create task/create";
-import DndContainer from "./components/dndContainer";
+import DndContainer from "./components/dnd container/dndContainer";
 
 
 

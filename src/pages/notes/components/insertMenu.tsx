@@ -8,7 +8,7 @@ interface InsertMenuProps {
     onClose: () => void;
 }
 
-export function InsertMenu({ sectionId, afterId, onAdd, onClose }: InsertMenuProps) {
+export function InsertMenu({ onAdd, onClose }: InsertMenuProps) {
     return (
         <div className="absolute right-0 top-8 bg-white rounded-lg shadow-xl border border-neutral-200 p-2 z-10 min-w-[150px]">
             <button

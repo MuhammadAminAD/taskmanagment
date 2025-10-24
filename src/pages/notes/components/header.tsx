@@ -1,6 +1,3 @@
-// pages/NoteDetail/components/NoteHeader.tsx
-import { Icon } from "@iconify/react";
-
 interface NoteHeaderProps {
     title: string;
     searchQuery: string;

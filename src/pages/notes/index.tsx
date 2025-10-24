@@ -1,4 +1,3 @@
-import Filter from "../todo/components/Filter/filter";
 import Create from "./components/create";
 import NoteCard from "./components/noteCard";
 import { useGetAllNotesQuery } from "../../services/note.services";

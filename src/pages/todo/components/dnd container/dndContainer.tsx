@@ -1,30 +1,37 @@
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import Empty from "../empty";
-import ItemCard from "../itemCard";
-import { DroppableZone } from "./DropableZone";
-import { StatusColumnProps } from "./dndContainer.types";
+import { useReducer } from "react";
+import { DndContext } from "@dnd-kit/core";
+import { STATUS_CONFIG } from "./dndContainer.util";
+import { useDndSensors, useDragHandlers, useTaskStatusUpdater } from "./dndContainer.hooks";
+import dndcontainerReducer, { DndcontainerInitialState } from "./dndContainer.reducers";
+import { StatusColumn } from "./StatusColumun";
 
-export function StatusColumn({ status, tasks }: StatusColumnProps) {
+export default function DndContainer() {
+    const [state, dispatch] = useReducer(dndcontainerReducer, DndcontainerInitialState);
+
+    const sensors = useDndSensors();
+    const updateTaskStatus = useTaskStatusUpdater();
+    const { handleDragStart, handleDragEnd, handleDragCancel } = useDragHandlers(
+        state.tasks,
+        dispatch,
+        updateTaskStatus
+    );
+
     return (
-        <div key={status.value} id={status.value} className="mt-8">
-            <h3 className={`mb-2 py-1 px-3 ${status.color} rounded-md w-fit text-white font-bold`}>
-                {status.label}
-            </h3>
-
-            <SortableContext
-                items={tasks.map((t) => t.id)}
-                strategy={verticalListSortingStrategy}
-            >
-                <DroppableZone status={status.value}>
-                    {tasks.length === 0 ? (
-                        <Empty />
-                    ) : (
-                        tasks.map((task) => (
-                            <ItemCard key={task.id} id={task.id} task={task} />
-                        ))
-                    )}
-                </DroppableZone>
-            </SortableContext>
-        </div>
+        <DndContext
+            sensors={sensors}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragCancel={handleDragCancel}
+        >
+            <div className="grid grid-cols-1 gap-4 mt-4">
+                {STATUS_CONFIG.map((status) => (
+                    <StatusColumn
+                        key={status.key}
+                        status={status}
+                        tasks={state.tasks[status.key]}
+                    />
+                ))}
+            </div>
+        </DndContext>
     );
 }

@@ -194,8 +194,24 @@ export default function CreateNote() {
             (e.target as HTMLFormElement).reset();
             setSelectedLogo("");
         } catch (error: unknown) {
-            console.error("Error creating note:", error);
-            const errorMessage = error?.data?.message || "Failed to create note";
+            console.error("Error:", error);
+
+            let errorMessage = "Failed to process task";
+
+            if (typeof error === 'object' && error !== null) {
+                if ('data' in error && typeof error.data === 'object' && error.data !== null) {
+                    const errorData = error.data as { message?: string };
+                    if (errorData.message) {
+                        errorMessage = errorData.message;
+                    }
+                }
+
+                // Standard Error object
+                else if ('message' in error && typeof error.message === 'string') {
+                    errorMessage = error.message;
+                }
+            }
+
             addAlert(errorMessage, "error");
         } finally {
             setButtonDisabled(false);

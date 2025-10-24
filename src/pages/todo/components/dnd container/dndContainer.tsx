@@ -13,7 +13,7 @@ export default function DndContainer() {
     const { data } = useGetTodosQuery(id ?? "")
 
     useEffect(() => {
-        if (data.ok) {
+        if (data?.ok) {
             dispatch({ type: "SET_TASKS", payload: data.data })
         }
     }, [data])

@@ -17,7 +17,7 @@ export const NoteServices = createApi({
         // 🟢 Bitta note olish (GET /notes/content/:id)
         getOneNote: builder.query({
             query: (id) => `/notes/content/${id}`,
-            providesTags: (result, error, id) => [{ type: "Note", id }],
+            providesTags: (_, __, id) => [{ type: "Note", id }],
             // Backend dan kelgan ma'lumotni frontend formatiga o'tkazish
             transformResponse: (response: any) => {
                 if (response.ok && response.sections) {
@@ -84,7 +84,7 @@ export const NoteServices = createApi({
                     },
                 };
             },
-            invalidatesTags: (result, error, { id }) => [{ type: "Note", id }, "Note"],
+            invalidatesTags: (_, __, { id }) => [{ type: "Note", id }, "Note"],
         }),
 
         // 🔴 O'chirish (DELETE /notes/:id)
@@ -103,7 +103,7 @@ export const NoteServices = createApi({
                 method: "POST",
                 body,
             }),
-            invalidatesTags: (result, error, { note_id }) => [
+            invalidatesTags: (_, __, { note_id }) => [
                 { type: "Note", id: note_id },
                 "Note"
             ],

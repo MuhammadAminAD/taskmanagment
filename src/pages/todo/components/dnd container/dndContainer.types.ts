@@ -1,5 +1,6 @@
 import { IItems, ITodo, TStatus } from "../../../../types/index.types";
 import { STATUS_CONFIG } from "./dndContainer.util";
+import React from "react"
 
 export interface StatusColumnProps {
     status: typeof STATUS_CONFIG[number];

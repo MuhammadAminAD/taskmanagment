@@ -1,13 +1,22 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { DndContext } from "@dnd-kit/core";
 import { STATUS_CONFIG } from "./dndContainer.util";
 import { useDndSensors, useDragHandlers, useTaskStatusUpdater } from "./dndContainer.hooks";
 import dndcontainerReducer, { DndcontainerInitialState } from "./dndContainer.reducers";
 import StatusColumn from "./statusColumun";
+import { useGetTodosQuery } from "../../../../services/todo.services";
+import { useParams } from "react-router-dom";
 
 export default function DndContainer() {
     const [state, dispatch] = useReducer(dndcontainerReducer, DndcontainerInitialState);
+    const { id } = useParams()
+    const { data } = useGetTodosQuery(id ?? "")
 
+    useEffect(() => {
+        if (data.ok) {
+            dispatch({ type: "SET_TASKS", payload: data.data })
+        }
+    }, [data])
     const sensors = useDndSensors();
     const updateTaskStatus = useTaskStatusUpdater();
     const { handleDragStart, handleDragEnd, handleDragCancel } = useDragHandlers(

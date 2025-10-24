@@ -17,4 +17,6 @@ export interface DroppableZoneProps {
     children: React.ReactNode;
 }
 
-export type tDndcontainerActions = { type: "SET_TASKS", payload: ITodo } | { type: "SET_ACTIVEID", payload: string } | { type: "UNSET_ACTIVEID" }
+export type tDndcontainerActions = { type: "SET_TASKS", payload: ITodo } |
+{ type: "SET_ACTIVEID", payload: string } |
+{ type: "UNSET_ACTIVEID" }

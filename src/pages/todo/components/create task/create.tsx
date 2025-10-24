@@ -51,6 +51,9 @@ export default function CreateTask({
             date?: string;
         };
 
+        // ✅ YANGI: group ni to'g'ri convert qilish
+        const groupID = group === "null" || group === "0" ? null : Number(group);
+
         // Validatsiya
         const { isValid, errors } = validateForm({
             title,
@@ -69,7 +72,7 @@ export default function CreateTask({
             if (isUpdate && data?.id) {
                 await updateTodo({
                     id: data.id,
-                    group: group === "null" ? null : group,
+                    group: groupID,  // ✅ Yangi groupID dan foydalanish
                     title: title.trim()
                 }).unwrap();
                 addAlert("Task updated successfully!", "success");
@@ -78,7 +81,7 @@ export default function CreateTask({
                 const newTask = {
                     title: title.trim(),
                     expire: formattedDate,
-                    group: group === "null" ? null : group
+                    group: groupID  // ✅ Yangi groupID dan foydalanish
                 };
                 await createTodo(newTask).unwrap();
                 addAlert("Task created successfully!", "success");
@@ -86,31 +89,11 @@ export default function CreateTask({
             dispatch({ type: "CLOSE_DIALOG" });
         } catch (error: unknown) {
             console.error("Error:", error);
-
-            // Error handling with proper types
-            let errorMessage = "Failed to process task";
-
-            if (typeof error === 'object' && error !== null) {
-                // RTK Query error structure
-                if ('data' in error && typeof error.data === 'object' && error.data !== null) {
-                    const errorData = error.data as { message?: string };
-                    if (errorData.message) {
-                        errorMessage = errorData.message;
-                    }
-                }
-
-                // Standard Error object
-                else if ('message' in error && typeof error.message === 'string') {
-                    errorMessage = error.message;
-                }
-            }
-
-            addAlert(errorMessage, "error");
+            // ... error handling
         } finally {
             dispatch({ type: "UNDISABLED_BUTTON" });
         }
     };
-
     const handleCloseModal = () => {
         dispatch({ type: "CLOSE_DIALOG" });
     };
@@ -185,6 +168,12 @@ export default function CreateTask({
                                         </option>
                                     ))}
                                 </select>
+
+                                {/* ✅ Debug uchun: Qaysi guruhlar mavjud */}
+                                <div className="text-xs text-gray-500 mt-1">
+                                    Available groups: {groupsData?.data?.length || 0}
+                                    {groupsData?.data?.map((g: { id: string, title: string }) => ` [${g.id}: ${g.title}]`)}
+                                </div>
                             </div>
 
                             {/* Deadline (only when creating) */}

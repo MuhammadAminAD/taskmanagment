@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdown-style {
+    width: 300px;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    padding: 16px;
+}
+
+.change-input {
+    outline: none;
+}
+
+.change-input:hover {
+    background: var(--color-blue-100);
+}

@@ -230,7 +230,7 @@ export default function CreateNote() {
         if (url.startsWith('http')) return url;
 
         // Nisbiy URL bo'lsa
-        const baseUrl = 'http://localhost:8080';
+        const baseUrl = 'https://tmanagment.up.railway.app';
         if (url.startsWith('/public')) {
             return `${baseUrl}${url}`;
         } else if (url.startsWith('/')) {

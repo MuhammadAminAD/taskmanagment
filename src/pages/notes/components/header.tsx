@@ -22,7 +22,7 @@ export function NoteHeader({
             <div className="max-w-7xl mx-auto px-6 py-4.25">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <img src={`http://localhost:8080/public${icon}`} alt={`${title} icon`} width={30} height={30} />
+                        <img src={`https://tmanagment.up.railway.app/public${icon}`} alt={`${title} icon`} width={30} height={30} />
                         <div>
                             <h1 className="font-bold text-2xl text-neutral-800 leading-[80%]">{title}</h1>
                             <p className="text-xs text-neutral-500">{description}</p>

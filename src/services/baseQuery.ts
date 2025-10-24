@@ -8,7 +8,7 @@ interface RefreshResponse {
 }
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:8080/api/v1',
+    baseUrl: import.meta.env.VITE_BACK_API,
     credentials: 'include',
     prepareHeaders: (headers) => {
         const token = localStorage.getItem('access_token')

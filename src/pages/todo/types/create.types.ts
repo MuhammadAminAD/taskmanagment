@@ -1,4 +1,4 @@
-import { IItems } from "../../../../types/index.types";
+import { IItems } from "../../../types/index.types";
 
 export interface iCreateTaskProps {
     isUpdate?: boolean;
@@ -19,3 +19,5 @@ export type RTKQueryError = {
         message: string;
     };
 }
+
+

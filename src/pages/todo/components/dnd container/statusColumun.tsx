@@ -2,7 +2,7 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import Empty from "../empty";
 import ItemCard from "../itemCard";
 import { DroppableZone } from "./DropableZone";
-import { StatusColumnProps } from "./dndContainer.types";
+import { StatusColumnProps } from "../../types/dndContainer.types";
 
 export default function StatusColumn({ status, tasks }: StatusColumnProps) {
     return (

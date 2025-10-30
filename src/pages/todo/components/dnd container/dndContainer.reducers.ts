@@ -1,4 +1,4 @@
-import { iInitialState, tDndcontainerActions } from "./dndContainer.types"
+import { iInitialState, tDndcontainerActions } from "../../types/dndContainer.types"
 
 export const DndcontainerInitialState: iInitialState = {
     tasks: { success: [], progress: [], todo: [] },

@@ -1,5 +1,5 @@
 import { useDroppable } from "@dnd-kit/core";
-import { DroppableZoneProps } from "./dndContainer.types";
+import { DroppableZoneProps } from "../../types/dndContainer.types";
 
 
 

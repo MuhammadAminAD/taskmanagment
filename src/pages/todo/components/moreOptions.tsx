@@ -51,7 +51,7 @@ export default function MoreOptions({
                         className="w-full flex items-center gap-2 px-3 py-1.5 text-sm text-neutral-700 hover:bg-zinc-100 rounded-md transition"
                     >
                         <Icon icon="mdi:pencil" width="18" height="18" />
-                        Update title
+                        Update
                     </button>
 
                     <button

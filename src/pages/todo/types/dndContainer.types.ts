@@ -1,5 +1,5 @@
-import { IItems, ITodo, TStatus } from "../../../../types/index.types";
-import { STATUS_CONFIG } from "./dndContainer.util";
+import { IItems, ITodo, TStatus } from "../../../types/index.types";
+import { STATUS_CONFIG } from "../components/dnd container/dndContainer.util";
 import React from "react"
 
 export interface StatusColumnProps {
@@ -20,3 +20,5 @@ export interface DroppableZoneProps {
 export type tDndcontainerActions = { type: "SET_TASKS", payload: ITodo } |
 { type: "SET_ACTIVEID", payload: string } |
 { type: "UNSET_ACTIVEID" }
+
+

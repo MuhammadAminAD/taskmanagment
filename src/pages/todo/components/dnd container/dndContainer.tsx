@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from "react";
 import { DndContext } from "@dnd-kit/core";
 import { STATUS_CONFIG } from "./dndContainer.util";
-import { useDndSensors, useDragHandlers, useTaskStatusUpdater } from "./dndContainer.hooks";
+import { useDndSensors, useDragHandlers, useTaskStatusUpdater } from "../../hooks/dndContainer.hooks";
 import dndcontainerReducer, { DndcontainerInitialState } from "./dndContainer.reducers";
 import StatusColumn from "./statusColumun";
 import { useGetTodosQuery } from "../../../../services/todo.services";

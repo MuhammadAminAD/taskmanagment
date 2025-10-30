@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-export default function Auth() {
+export default function AuthPage() {
     function handleGoogleClick() {
         window.location.href = `https://tmanagment.up.railway.app/api/v1/auth/google`
     }

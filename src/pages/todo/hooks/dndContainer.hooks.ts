@@ -1,9 +1,9 @@
 import { DragEndEvent, DragStartEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { useAlert } from "../../../../components/Alert/useAlert";
-import { useUpdatedTodosMutation } from "../../../../services/todo.services";
-import { IItems, ITodo } from "../../../../types/index.types";
+import { useAlert } from "../../../components/Alert/useAlert";
+import { useUpdatedTodosMutation } from "../../../services/todo.services";
+import { IItems, ITodo } from "../../../types/index.types";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { tDndcontainerActions } from "./dndContainer.types";
+import { tDndcontainerActions } from "../../types/dndContainer.types";
 
 export function useTaskStatusUpdater() {
     const [updateTodo] = useUpdatedTodosMutation();
@@ -122,3 +122,5 @@ export function useDndSensors() {
         })
     );
 }
+
+

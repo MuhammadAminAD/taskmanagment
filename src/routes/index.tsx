@@ -1,11 +1,11 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import ToDo from "../pages/todo";
-import Auth from "../pages/auth";
-import GetToken from "../pages/token";
+import ToDo from "../pages/todo/ToDoPage";
+import GetToken from "../pages/token/TokenPage";
 import Aside from "../components/shared/Aside";
-import NotesPage from "../pages/notes";
-import Lessons from "../pages/notes/detail page";
+import NotesPage from "../pages/notes/NotesPage";
+import Lessons from "../pages/notes/detail page/NoteDetailPage";
 import ProtectedRoutes from "./protectedRoutes";
+import AuthPage from "../pages/auth/AuthPage";
 
 export default function IndexRoutes() {
     const location = useLocation();
@@ -25,7 +25,7 @@ export default function IndexRoutes() {
             {/* 🔹 MAIN CONTENT */}
             <main className="flex-1 h-full overflow-y-auto">
                 <Routes>
-                    <Route path="/login" element={<Auth />} />
+                    <Route path="/login" element={<AuthPage />} />
                     <Route element={<ProtectedRoutes />}>
                         <Route path="/todo" element={<ToDo />} />
                         <Route path="/todo/:id" element={<ToDo />} />

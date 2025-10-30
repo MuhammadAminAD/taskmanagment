@@ -21,7 +21,7 @@ export default function ItemCard({ id, task, }: { id: string, task: IItems }) {
     } = useSortable({ id });
     const [deleteTodo] = useDeleteTodosMutation()
     const { addAlert } = useAlert()
-    const [updateModal, setUpdateModal] = useState(false) // typo tuzatildi
+    const [updateModal, setUpdateModal] = useState(false)
 
     const handleFormatTime = (time: number) => {
         return new Date(time).toLocaleDateString("uz-UZ", {
@@ -65,7 +65,10 @@ export default function ItemCard({ id, task, }: { id: string, task: IItems }) {
                     </button>
 
                     <ProgressDropdown status={task.status} id={task.id} />
-                    <p className="ml-2">{task.title}</p>
+                    <div className="flex items-center">
+                        <img src="https://miro.medium.com/v2/resize:fit:1400/0*kkYg_lUH1OdYCOew.jpg" alt="description" className="w-8 h-8 rounded " />
+                        <p className="ml-2">{task.title}</p>
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-5">

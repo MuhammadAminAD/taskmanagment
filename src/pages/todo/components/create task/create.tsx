@@ -1,4 +1,4 @@
-import { useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import IPlus from "../../../../components/Icons/IPlus";
 import {
     useCreateTodosMutation,
@@ -10,9 +10,9 @@ import { useGetGroupsQuery } from "../../../../services/groups.services";
 import { createPortal } from "react-dom";
 import { formatDateTimeToISO } from "./create.utils";
 import { validateForm } from "./create.validators";
-import { useBodyScroll, useKeyboardShortcuts, useInputFocus } from "./create.hooks";
+import { useInputFocus } from "../../hooks/CreateTaskHook";
 import createTodoReducer, { CreateTodoInitialState, tCreateTodoErrors } from "./create.reducers";
-import { iCreateTaskProps } from "./create.types";
+import { iCreateTaskProps } from "../../types/create.types";
 
 export default function CreateTask({
     isUpdate = false,
@@ -26,10 +26,8 @@ export default function CreateTask({
     const { addAlert } = useAlert();
     const titleInputRef = useRef<HTMLInputElement>(null);
 
-    // Custom hooklar
-    useBodyScroll(state.open, isUpdate, handleClose, dispatch);
+    // Input focus hook
     useInputFocus(state.open, titleInputRef);
-    useKeyboardShortcuts(state.open, isUpdate, dispatch);
 
     // Real-time validatsiya
     const handleInputChange = (field: keyof tCreateTodoErrors) => {
@@ -39,6 +37,51 @@ export default function CreateTask({
             dispatch({ type: "SET_ERRORS", payload: newErrors });
         }
     };
+
+    // ✅ isUpdate true bo'lganda avtomatik ochish
+    useEffect(() => {
+        if (isUpdate) {
+            console.log("🔵 Update mode activated, opening modal...");
+            dispatch({ type: "OPEN_DIALOG" });
+            document.body.style.overflow = "hidden";
+        }
+
+        return () => {
+            document.body.style.overflow = "unset";
+        };
+    }, [isUpdate]);
+
+    // ✅ ESC tugmasi uchun
+    useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === "Escape" && state.open) {
+                handleCloseModal();
+            }
+        };
+
+        if (state.open) {
+            window.addEventListener("keydown", handleEscape);
+        }
+
+        return () => {
+            window.removeEventListener("keydown", handleEscape);
+        };
+    }, [state.open]);
+
+    // ✅ Ctrl+K shortcut (faqat create mode uchun)
+    useEffect(() => {
+        if (isUpdate) return;
+
+        const handleShortcut = (e: KeyboardEvent) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+                e.preventDefault();
+                dispatch({ type: "OPEN_DIALOG" });
+            }
+        };
+
+        window.addEventListener("keydown", handleShortcut);
+        return () => window.removeEventListener("keydown", handleShortcut);
+    }, [isUpdate]);
 
     // Submit
     const handleSubmit = async (e: React.FormEvent) => {
@@ -51,7 +94,6 @@ export default function CreateTask({
             date?: string;
         };
 
-        // ✅ YANGI: group ni to'g'ri convert qilish
         const groupID = group === "null" || group === "0" ? null : Number(group);
 
         // Validatsiya
@@ -72,7 +114,7 @@ export default function CreateTask({
             if (isUpdate && data?.id) {
                 await updateTodo({
                     id: data.id,
-                    group: groupID,  // ✅ Yangi groupID dan foydalanish
+                    group: groupID,
                     title: title.trim()
                 }).unwrap();
                 addAlert("Task updated successfully!", "success");
@@ -81,39 +123,55 @@ export default function CreateTask({
                 const newTask = {
                     title: title.trim(),
                     expire: formattedDate,
-                    group: groupID  // ✅ Yangi groupID dan foydalanish
+                    group: groupID
                 };
                 await createTodo(newTask).unwrap();
                 addAlert("Task created successfully!", "success");
             }
-            dispatch({ type: "CLOSE_DIALOG" });
+            handleCloseModal();
         } catch (error: unknown) {
             console.error("Error:", error);
-            // ... error handling
+            addAlert("An error occurred!", "error");
         } finally {
             dispatch({ type: "UNDISABLED_BUTTON" });
         }
     };
+
     const handleCloseModal = () => {
+        console.log("🔴 Closing modal...");
         dispatch({ type: "CLOSE_DIALOG" });
+        document.body.style.overflow = "unset";
+
+        if (handleClose) {
+            handleClose();
+        }
     };
 
     const handleOpenModal = () => {
+        console.log("🟢 Opening modal...");
         dispatch({ type: "OPEN_DIALOG" });
+        document.body.style.overflow = "hidden";
     };
+
+    // ✅ Debug: state.open ni kuzatish
+    useEffect(() => {
+        console.log("📊 Modal state.open:", state.open, "| isUpdate:", isUpdate);
+    }, [state.open, isUpdate]);
 
     return (
         <div>
-            {/* + Button */}
-            <button
-                onClick={handleOpenModal}
-                className={`w-10 h-10 flex justify-center items-center bg-blue-400 text-zinc-200 hover:bg-blue-500 hover:text-white rounded shadow transition duration-300 ${isUpdate && "hidden"}`}
-                aria-label="Create new task"
-            >
-                <IPlus />
-            </button>
+            {/* + Button - faqat yangi task yaratishda */}
+            {!isUpdate && (
+                <button
+                    onClick={handleOpenModal}
+                    className="w-10 h-10 flex justify-center items-center bg-blue-400 text-zinc-200 hover:bg-blue-500 hover:text-white rounded shadow transition duration-300"
+                    aria-label="Create new task"
+                >
+                    <IPlus />
+                </button>
+            )}
 
-            {/* Overlay */}
+            {/* Overlay - har doim render qilish */}
             {createPortal(
                 <div
                     onClick={handleCloseModal}
@@ -123,12 +181,21 @@ export default function CreateTask({
                     {/* Sidebar */}
                     <div
                         onClick={(e) => e.stopPropagation()}
-                        className={`h-full bg-white w-[350px] sm:w-[400px] md:w-[350px] shadow-lg transition-all duration-300 border-r border-neutral-300 overflow-hidden ${!state.open ? "max-w-0 opacity-0" : "max-w-[500px] py-6 px-5 opacity-100"
+                        className={`h-full bg-white w-[350px] sm:w-[400px] md:w-[350px] shadow-lg transition-all duration-300 border-r border-neutral-300 overflow-y-auto ${!state.open ? "max-w-0 opacity-0" : "max-w-[500px] py-6 px-5 opacity-100"
                             }`}
                     >
-                        <h2 className="text-center text-xl font-semibold text-neutral-700 mb-6">
-                            {isUpdate ? "Update Task" : "Create a new task"}
-                        </h2>
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-xl font-semibold text-neutral-700">
+                                {isUpdate ? "Update Task" : "Create a new task"}
+                            </h2>
+                            <button
+                                onClick={handleCloseModal}
+                                className="text-gray-400 hover:text-gray-600 transition"
+                                aria-label="Close"
+                            >
+                                ✕
+                            </button>
+                        </div>
 
                         <form onSubmit={handleSubmit} className="space-y-5">
                             {/* Title */}
@@ -142,7 +209,8 @@ export default function CreateTask({
                                     type="text"
                                     defaultValue={isUpdate ? data?.title : ""}
                                     placeholder="Enter task title"
-                                    className={`w-full border rounded py-2 px-3 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition ${state.errors.title ? "border-red-500" : "border-neutral-400"}`}
+                                    className={`w-full border rounded py-2 px-3 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition ${state.errors.title ? "border-red-500" : "border-neutral-400"
+                                        }`}
                                     onChange={() => handleInputChange('title')}
                                     maxLength={100}
                                 />
@@ -158,22 +226,16 @@ export default function CreateTask({
                                 </label>
                                 <select
                                     name="group"
-                                    defaultValue={isUpdate ? data?.group_id : ""}
+                                    defaultValue={isUpdate && data?.group_id ? data.group_id : "null"}
                                     className="w-full border border-neutral-400 rounded py-2 px-3 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                                 >
-                                    <option value={"null"}>None</option>
+                                    <option value="null">None</option>
                                     {groupsData?.data?.map((group: IGroups) => (
                                         <option key={group.id} value={group.id}>
                                             {group.title}
                                         </option>
                                     ))}
                                 </select>
-
-                                {/* ✅ Debug uchun: Qaysi guruhlar mavjud */}
-                                <div className="text-xs text-gray-500 mt-1">
-                                    Available groups: {groupsData?.data?.length || 0}
-                                    {groupsData?.data?.map((g: { id: string, title: string }) => ` [${g.id}: ${g.title}]`)}
-                                </div>
                             </div>
 
                             {/* Deadline (only when creating) */}
@@ -185,7 +247,8 @@ export default function CreateTask({
                                     <input
                                         type="date"
                                         name="date"
-                                        className={`w-full border rounded py-2 px-3 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition ${state.errors.date ? "border-red-500" : "border-neutral-400"}`}
+                                        className={`w-full border rounded py-2 px-3 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition ${state.errors.date ? "border-red-500" : "border-neutral-400"
+                                            }`}
                                         onChange={() => handleInputChange('date')}
                                         min={new Date().toISOString().split('T')[0]}
                                     />
@@ -202,12 +265,8 @@ export default function CreateTask({
                                 className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 rounded-md transition cursor-pointer disabled:bg-blue-300 disabled:cursor-not-allowed"
                             >
                                 {state.buttonDisabled
-                                    ? isUpdate
-                                        ? "Updating..."
-                                        : "Creating..."
-                                    : isUpdate
-                                        ? "Update Task"
-                                        : "Create Task"}
+                                    ? isUpdate ? "Updating..." : "Creating..."
+                                    : isUpdate ? "Update Task" : "Create Task"}
                             </button>
                         </form>
 

@@ -1,4 +1,6 @@
 import Filter from "./components/Filter/filter";
+import GithubConnection from "./components/GithubConnection";
+import Users from "./components/Users";
 import CreateTask from "./components/create task/create";
 import DndContainer from "./components/dnd container/dndContainer";
 
@@ -12,6 +14,8 @@ export default function ToDo() {
                 <h1 className="text-xl font-medium">My todos</h1>
 
                 <div className="flex items-center gap-4 relative z-1">
+                    <Users />
+                    <GithubConnection />
                     <Filter />
                     <CreateTask />
                 </div>
@@ -23,3 +27,5 @@ export default function ToDo() {
         </div>
     );
 }
+
+
